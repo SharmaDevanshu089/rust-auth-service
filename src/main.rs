@@ -1,4 +1,3 @@
-use anyhow::Ok;
 use axum::Router;
 use axum::routing::get;
 use dotenvy;
@@ -11,8 +10,11 @@ use tracing_subscriber::layer::SubscriberExt;
 #[tokio::main]
 async fn main() {
     // ENVRIMENT VARIABLES KO LOAD KARNA HAI DOTEVY SE SAVES TIME
-
     dotenvy::dotenv().ok();
+
+    // TRACER KO INITIALISE KAR RAHA HU ENV KE BAAD TAKI LOG MAI ENV VAR DAAL SAKETE
+    // ISSE ENV KE ERROR TRACE NAHI HO PAYENGE
+    tracing_subscriber::fmt::init();
 
     //YE LOCALHOST PE 3000 PORT PE SOCKET BANAYEGA
     let websocket_address = SocketAddr::from(([0, 0, 0, 0], 3000));
