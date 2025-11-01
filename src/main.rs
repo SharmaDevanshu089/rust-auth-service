@@ -1,11 +1,14 @@
 use axum::Router;
 use axum::routing::get;
+use diesel_async::AsyncPgConnection;
+use diesel_async::pooled_connection::AsyncDieselConnectionManager;
 use dotenvy;
+use std::env;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
-// use tracing::util::SubscriberExt;
 use tracing_subscriber::fmt;
 use tracing_subscriber::layer::SubscriberExt;
+// use tracing::util::SubscriberExt;
 
 #[tokio::main]
 async fn main() {
@@ -19,13 +22,16 @@ async fn main() {
     //YE LOCALHOST PE 3000 PORT PE SOCKET BANAYEGA
     let websocket_address = SocketAddr::from(([0, 0, 0, 0], 3000));
 
+    // ENVIRMENT SE DATABASE URL NIKALNA HAI
+    let database_url = env::var(DATABASE_URL).unwrap();
+
     // ABHI EK TEMPORARY ROUTER BANA RAHA HU TEST KE LIYE BAAD ME ACCHE SE LIKH DUNGA
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
     let axium_router = Router::new().route("/", get(return_hello));
     tracing::info!("Server Listening on {}", websocket_address.to_string());
     // AB ISS PORT KO BIND KARUNGA, ABHI ERROR KO UNWRAP KAR RAHA HU BAAD ME LOG KAURNGA
 
-    // ABHI DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE USE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
+    // DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE USE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
 
     // CREATING A TCP LISNER , ISS UNWRAP KO FUTURE MAI HANDLE KARUNGA
 
