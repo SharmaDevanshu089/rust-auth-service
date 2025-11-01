@@ -8,3 +8,12 @@ tokio = { version = "1", features = ["full"] }
 diesel = { version = "2.1.0", features = ["postgres", "uuid", "chrono", "serde_json"] }
 diesel-async = { version = "0.4", features = ["postgres", "bb8"] } 
 #purana wala crate kaam nahi kar raha 
+axum = "0.7"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bcrypt = "0.15"
+jsonwebtoken = "9"
+anyhow = "1.0"
+thiserror = "1.0"
