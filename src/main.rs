@@ -23,7 +23,7 @@ async fn main() {
     let websocket_address = SocketAddr::from(([0, 0, 0, 0], 3000));
 
     // ENVIRMENT SE DATABASE URL NIKALNA HAI
-    let database_url = env::var(DATABASE_URL).unwrap();
+    let database_url = env::var("DATABASE_URL").unwrap();
 
     // PUTTING UPAR VALI VALUE IN STUCT OF MANAGER
     let config = AsyncDieselConnectionManager::<AsyncPgConnection>::new(database_url);
