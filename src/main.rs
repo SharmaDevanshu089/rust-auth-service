@@ -25,6 +25,9 @@ async fn main() {
     // ENVIRMENT SE DATABASE URL NIKALNA HAI
     let database_url = env::var(DATABASE_URL).unwrap();
 
+    // PUTTING UPAR VALI VALUE IN STUCT OF MANAGER
+    let config = AsyncDieselConnectionManager::<AsyncPgConnection>::new(database_url);
+
     // ABHI EK TEMPORARY ROUTER BANA RAHA HU TEST KE LIYE BAAD ME ACCHE SE LIKH DUNGA
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
     let axium_router = Router::new().route("/", get(return_hello));
