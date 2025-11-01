@@ -29,14 +29,12 @@ async fn main() {
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
     let axium_router = Router::new().route("/", get(return_hello));
     tracing::info!("Server Listening on {}", websocket_address.to_string());
-    // AB ISS PORT KO BIND KARUNGA, ABHI ERROR KO UNWRAP KAR RAHA HU BAAD ME LOG KAURNGA
 
     // DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE USE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
-
     // CREATING A TCP LISNER , ISS UNWRAP KO FUTURE MAI HANDLE KARUNGA
-
     let new_tcp_lisner_for_serve = TcpListener::bind(websocket_address).await.unwrap();
 
+    // AB ISS PORT KO BIND KARUNGA, ABHI ERROR KO UNWRAP KAR RAHA HU BAAD ME LOG KAURNGA
     axum::serve(new_tcp_lisner_for_serve, axium_router)
         .await
         .unwrap();
