@@ -12,7 +12,7 @@ use tracing_subscriber::layer::SubscriberExt;
 // use tracing::util::SubscriberExt;
 
 #[derive(Clone)]
-struct AppState {
+struct app_state {
     db_pool: bb8::Pool<AsyncDieselConnectionManager<AsyncPgConnection>>,
 }
 
@@ -38,7 +38,9 @@ async fn main() {
 
     // ABHI EK TEMPORARY ROUTER BANA RAHA HU TEST KE LIYE BAAD ME ACCHE SE LIKH DUNGA
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
-    let axium_router = Router::new().route("/", get(return_hello));
+    let axium_router = Router::new()
+        .route("/", get(return_hello))
+        .with_state(app_state);
     tracing::info!("Server Listening on {}", websocket_address.to_string());
 
     // DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE USE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
