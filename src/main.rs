@@ -22,7 +22,7 @@ async fn main() {
     // ABHI EK TEMPORARY ROUTER BANA RAHA HU TEST KE LIYE BAAD ME ACCHE SE LIKH DUNGA
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
     let axium_router = Router::new().route("/", get(return_hello));
-
+    tracing::info!("Server Listening on {}", websocket_address.to_string());
     // AB ISS PORT KO BIND KARUNGA, ABHI ERROR KO UNWRAP KAR RAHA HU BAAD ME LOG KAURNGA
 
     // ABHI DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE USE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
