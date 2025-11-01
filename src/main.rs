@@ -11,6 +11,11 @@ use tracing_subscriber::fmt;
 use tracing_subscriber::layer::SubscriberExt;
 // use tracing::util::SubscriberExt;
 
+#[derive(Clone)]
+struct AppState {
+    db_pool: bb8::Pool<AsyncDieselConnectionManager<AsyncPgConnection>>,
+}
+
 #[tokio::main]
 async fn main() {
     // ENVRIMENT VARIABLES KO LOAD KARNA HAI DOTEVY SE SAVES TIME
