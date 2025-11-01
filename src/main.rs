@@ -19,10 +19,14 @@ async fn main() {
     // CREATING A TCP LISNER , ISS ERROR KO FUTURE MAI HANDLE KARUNGA
 
     let new_tcp_lisner_for_serve = TcpListener::bind(websocket_address).await.unwrap();
-    axum::Server::bind(&websocket_address)
-        .serve(axium_router.into_make_service())
+
+    axum::serve(new_tcp_lisner_for_serve, axium_router.into_make_service())
         .await
         .unwrap();
+    // axum::Server::bind(&websocket_address)
+    //     .serve(axium_router.into_make_service())
+    //     .await
+    //     .unwrap();
 }
 
 // YE KEVAL TESTING KE LIYE H , KUCH KAAM KA NAHI HAI SIRF HELLO RETURN KARTA HAI
