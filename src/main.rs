@@ -15,6 +15,10 @@ async fn main() {
     // AB ISS PORT KO BIND KARUNGA, ABHI ERROR KO UNWRAP KAR RAHA HU BAAD ME LOG KAURNGA
 
     // ABHI DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE USE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
+
+    // CREATING A TCP LISNER , ISS ERROR KO FUTURE MAI HANDLE KARUNGA
+
+    let new_tcp_lisner_for_serve = TcpListener::bind(websocket_address).await.unwrap();
     axum::Server::bind(&websocket_address)
         .serve(axium_router.into_make_service())
         .await
