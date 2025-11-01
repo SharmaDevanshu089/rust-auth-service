@@ -4,7 +4,7 @@ use axum::routing::get;
 use dotenvy;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
-use tracing::util::SubscriberExt;
+// use tracing::util::SubscriberExt;
 use tracing_subscriber::fmt;
 use tracing_subscriber::layer::SubscriberExt;
 
