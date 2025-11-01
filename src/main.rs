@@ -2,6 +2,9 @@ use axum::Router;
 use axum::routing::get;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
+use tracing::util::SubscriberExt;
+use tracing_subscriber::fmt;
+use tracing_subscriber::layer::SubscriberExt;
 
 #[tokio::main]
 async fn main() {
@@ -24,10 +27,10 @@ async fn main() {
         .await
         .unwrap();
 
-    // axum::Server::bind(&websocket_address)
-    //     .serve(axium_router.into_make_service())
-    //     .await
-    //     .unwrap();
+    /*axum::Server::bind(&websocket_address)
+    .serve(axium_router.into_make_service())
+    .await
+    .unwrap();*/
 }
 
 // YE KEVAL TESTING KE LIYE H , KUCH KAAM KA NAHI HAI SIRF HELLO RETURN KARTA HAI
