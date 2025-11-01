@@ -2,6 +2,7 @@ use axum::Router;
 use axum::routing::get;
 use diesel_async::AsyncPgConnection;
 use diesel_async::pooled_connection::AsyncDieselConnectionManager;
+use diesel_async::pooled_connection::bb8;
 use dotenvy;
 use std::env;
 use std::net::SocketAddr;
