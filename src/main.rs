@@ -1,5 +1,6 @@
 use axum::Router;
 use axum::routing::get;
+use dotenvy;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tracing::util::SubscriberExt;
