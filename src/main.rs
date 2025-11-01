@@ -34,6 +34,8 @@ async fn main() {
     // PUTTING UPAR VALI VALUE IN STUCT OF MANAGER
     let config = AsyncDieselConnectionManager::<AsyncPgConnection>::new(database_url);
 
+    let pool = bb8::Pool::builder().build(config).await.unwrap();
+
     // ABHI EK TEMPORARY ROUTER BANA RAHA HU TEST KE LIYE BAAD ME ACCHE SE LIKH DUNGA
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
     let axium_router = Router::new().route("/", get(return_hello));
