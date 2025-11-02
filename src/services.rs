@@ -37,4 +37,15 @@ pub mod user_service {
         //USER KO RETURN KARNA HAI
         user
     }
+    pub async fn find_user_by_email(email_in: String) -> Result<Users, diesel::result::Error> {
+        let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        let mut conn = AsyncPgConnection::establish(&db_url)
+            .await
+            .expect("Failed to connect to database");
+        let user = users // `users` comes from the dsl
+            .filter(email.eq(email_in)) // This is the WHERE clause
+            .first::<Users>(&mut conn) // Get the first result or fail
+            .await;
+        user
+    }
 }
