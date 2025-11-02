@@ -1,6 +1,7 @@
 use crate::services::user_service;
 use axum::Json;
 use axum::http::StatusCode;
+use axum::response::IntoResponse;
 use bcrypt::verify;
 use bcrypt::{DEFAULT_COST, hash};
 use chrono::{Duration, Utc};
@@ -91,19 +92,19 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> impl axum::resp
                     (StatusCode::OK, "Login successful!".to_string());
                     let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
 
-                    // 2. Set the expiration time (e.g., 1 day from now)
+                    // ONE DAY KO EXPIRY HAI
                     let expiration = Utc::now()
                         .checked_add_signed(Duration::days(1))
                         .expect("Failed to create expiration")
                         .timestamp();
 
-                    // 3. Create the claims
+                    // CLAIM TOKEN KA
                     let claims = Claims {
-                        sub: user.id.to_string(), // Use the user's ID as the subject
+                        sub: user.id.to_string(),
                         exp: expiration as usize,
                     };
 
-                    // 4. Encode the token
+                    // TOKEN KO JSON ME BHARNA
                     let token = encode(
                         &Header::default(),
                         &claims,
@@ -114,8 +115,8 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> impl axum::resp
                         "failed_to_create_token".to_string()
                     });
 
-                    // 5. Send the token back as JSON
-                    (StatusCode::OK, Json(TokenResponse { token }))
+                    // TOKEN KO RESPONSE ME
+                    (StatusCode::OK, Json(TokenResponse { token })).into_response()
                 }
                 Ok(Ok(false)) => {
                     info!("Password verification failed for user: {}", user.email);
@@ -123,6 +124,7 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> impl axum::resp
                         StatusCode::UNAUTHORIZED,
                         "Invalid email or password".to_string(),
                     )
+                        .into_response()
                 }
                 _ => {
                     error!("Password verification task failed");
@@ -130,6 +132,7 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> impl axum::resp
                         StatusCode::INTERNAL_SERVER_ERROR,
                         "Internal server error".to_string(),
                     )
+                        .into_response()
                 }
             }
         }
@@ -139,6 +142,7 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> impl axum::resp
                 StatusCode::UNAUTHORIZED,
                 "Invalid email or password".to_string(),
             )
+                .into_response()
         }
         Err(e) => {
             // KUCH GADBADH HAI
@@ -147,6 +151,7 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> impl axum::resp
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Internal server error".to_string(),
             )
+                .into_response()
         }
     }
 }
