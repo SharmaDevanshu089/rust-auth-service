@@ -61,20 +61,15 @@ pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCo
 pub async fn login_handler(Json(payload): Json<LoginPayload>) -> (StatusCode, String) {
     info!("Login attempt: {:?}", payload);
 
-    // Call the service to find the user
+    // YE UPAR KYO AA RAHA H PTA NAHI
     let user_result = user_service::find_user_by_email(payload.email).await;
 
-    // Check the result
     match user_result {
         Ok(user) => {
-            // User was found!
             info!("User found: {:?}", user);
-            // We'll check the password in the next step.
-            // For now, return a temporary success message.
             (StatusCode::OK, "User found".to_string())
         }
         Err(diesel::result::Error::NotFound) => {
-            // User was not found
             info!("User not found");
             (
                 StatusCode::UNAUTHORIZED,
@@ -82,7 +77,7 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> (StatusCode, St
             )
         }
         Err(e) => {
-            // Some other database error
+            // KUCH GADBADH HAI
             error!("Database error: {}", e);
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
