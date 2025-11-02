@@ -68,7 +68,29 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> (StatusCode, St
     match user_result {
         Ok(user) => {
             info!("User found: {:?}", user);
-            (StatusCode::OK, "User found".to_string())
+            (StatusCode::OK, "User found".to_string());
+            let verify_result =
+                task::spawn_blocking(move || verify(payload.password, &user.password_hash)).await;
+            match verify_result {
+                Ok(Ok(true)) => {
+                    info!("Password verification successful for user: {}", user.email);
+                    (StatusCode::OK, "Login successful!".to_string())
+                }
+                Ok(Ok(false)) => {
+                    info!("Password verification failed for user: {}", user.email);
+                    (
+                        StatusCode::UNAUTHORIZED,
+                        "Invalid email or password".to_string(),
+                    )
+                }
+                _ => {
+                    error!("Password verification task failed");
+                    (
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        "Internal server error".to_string(),
+                    )
+                }
+            }
         }
         Err(diesel::result::Error::NotFound) => {
             info!("User not found");
