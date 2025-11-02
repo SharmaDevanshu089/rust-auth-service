@@ -9,6 +9,7 @@ use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tracing_subscriber::fmt;
 mod models;
+mod schema;
 
 /*#[derive(Clone)]
 struct AppState {
