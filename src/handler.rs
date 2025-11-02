@@ -25,12 +25,13 @@ pub struct LoginPayload {
     pub email: String,
     pub password: String,
 }
-
+use crate::auth::Claims;
+/* Moved it to Auth
 #[derive(Serialize)]
 struct Claims {
     sub: String,
     exp: usize,
-}
+}*/
 
 #[derive(Serialize)]
 pub struct TokenResponse {
