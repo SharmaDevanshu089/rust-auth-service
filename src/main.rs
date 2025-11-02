@@ -11,6 +11,7 @@ use tracing_subscriber::fmt;
 mod handler;
 mod models;
 mod schema;
+use crate::handler::login_handler;
 use crate::handler::register_handler;
 use axum::routing::post;
 mod services;
@@ -45,7 +46,8 @@ async fn main() {
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
     let axium_router = Router::new()
         .route("/", get(return_hello))
-        .route("/register", post(register_handler));
+        .route("/register", post(register_handler))
+        .route("/login", post(login_handler));
 
     tracing::info!("Server Listening on {}", websocket_address.to_string());
 

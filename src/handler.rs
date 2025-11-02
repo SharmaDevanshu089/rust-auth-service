@@ -15,6 +15,12 @@ pub struct RegisterPayload {
     pub email: String,
     pub password: String,
 }
+#[derive(Deserialize, Debug)]
+pub struct LoginPayload {
+    pub email: String,
+    pub password: String,
+}
+
 pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCode, String) {
     info!("Received new registration: {:?}", payload);
 
@@ -50,4 +56,8 @@ pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCo
     // YE EK TEMPRORY HAI ABHI YAHA ISSE DB M DAAL DUNGA
 
     (StatusCode::CREATED, "User created successfully".to_string())
+}
+
+pub async fn login_handler(Json(payload): Json<LoginPayload>) {
+    info!("Login attempt: {:?}", payload);
 }
