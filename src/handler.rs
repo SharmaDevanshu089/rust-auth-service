@@ -11,3 +11,6 @@ pub struct RegisterPayload {
     pub email: String,
     pub password: String,
 }
+pub async fn register_handler(Json(payload): Json<RegisterPayload>) {
+    // ABHI ISS LOG KAR RHA HU BAAD ME DB ME DALUNGA
+}
