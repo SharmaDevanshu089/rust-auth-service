@@ -14,6 +14,7 @@ mod schema;
 use crate::handler::login_handler;
 use crate::handler::register_handler;
 use axum::routing::post;
+mod auth;
 mod services;
 
 /*#[derive(Clone)]
