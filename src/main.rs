@@ -8,8 +8,11 @@ use std::env;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tracing_subscriber::fmt;
+mod handler;
 mod models;
 mod schema;
+use crate::handler::register_handler;
+use axum::routing::post;
 
 /*#[derive(Clone)]
 struct AppState {
@@ -39,7 +42,9 @@ async fn main() {
 
     // ABHI EK TEMPORARY ROUTER BANA RAHA HU TEST KE LIYE BAAD ME ACCHE SE LIKH DUNGA
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
-    let axium_router = Router::new().route("/", get(return_hello));
+    let axium_router = Router::new()
+        .route("/", get(return_hello))
+        .route("/register", post(register_handler));
 
     tracing::info!("Server Listening on {}", websocket_address.to_string());
 
