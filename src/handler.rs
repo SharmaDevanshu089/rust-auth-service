@@ -1,4 +1,6 @@
 use axum::Json;
+use axum::http::StatusCode;
+use bcrypt::{DEFAULT_COST, hash};
 use diesel_async::{AsyncConnection, AsyncPgConnection};
 use serde::Deserialize;
 use std::env;
