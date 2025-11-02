@@ -1,20 +1,19 @@
 use axum::Router;
 use axum::routing::get;
-use diesel_async::AsyncPgConnection;
 use diesel_async::pooled_connection::AsyncDieselConnectionManager;
-use diesel_async::pooled_connection::bb8;
+use diesel_async::pooled_connection::bb8::Pool;
+use diesel_async::{AsyncConnection, AsyncPgConnection};
 use dotenvy;
 use std::env;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
+// We only need `fmt` for `fmt::init()`
 use tracing_subscriber::fmt;
-use tracing_subscriber::layer::SubscriberExt;
-// use tracing::util::SubscriberExt;
 
-#[derive(Clone)]
-struct app_state {
-    db_pool: bb8::Pool<AsyncDieselConnectionManager<AsyncPgConnection>>,
-}
+/*#[derive(Clone)]
+struct AppState {
+    db_pool: Pool<AsyncDieselConnectionManager<AsyncPgConnection>>,
+}*/
 
 #[tokio::main]
 async fn main() {
@@ -32,18 +31,18 @@ async fn main() {
     let database_url = env::var("DATABASE_URL").unwrap();
 
     // PUTTING UPAR VALI VALUE IN STUCT OF MANAGER
-    let config = AsyncDieselConnectionManager::<AsyncPgConnection>::new(database_url);
+    // let config = AsyncDieselConnectionManager::<AsyncPgConnection>::new(database_url);
 
-    let pool = bb8::Pool::builder().build(config).await.unwrap();
+    // FIX: Use the directly imported `Pool` type here too
+    // let pool = Pool::builder().build(config).await.unwrap();
 
     // ABHI EK TEMPORARY ROUTER BANA RAHA HU TEST KE LIYE BAAD ME ACCHE SE LIKH DUNGA
     // YE ROUTER ABHI KEVAL HELLO VALE KO CALL KAR RAH H
-    let axium_router = Router::new()
-        .route("/", get(return_hello))
-        .with_state(app_state);
+    let axium_router = Router::new().route("/", get(return_hello));
+
     tracing::info!("Server Listening on {}", websocket_address.to_string());
 
-    // DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE USE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
+    // DOCS READ KIE NEW AXUM ME SERVER KI JAGAH SERVE HOTA HAI AUR AB TOKIO KA TCP LISNER USE HOGA
     // CREATING A TCP LISNER , ISS UNWRAP KO FUTURE MAI HANDLE KARUNGA
     let new_tcp_lisner_for_serve = TcpListener::bind(websocket_address).await.unwrap();
 
@@ -52,10 +51,7 @@ async fn main() {
         .await
         .unwrap();
 
-    /*axum::Server::bind(&websocket_address)
-    .serve(axium_router.into_make_service())
-    .await
-    .unwrap();*/
+    let created_connection = AsyncPgConnection::establish(&database_url).await.unwrap();
 }
 
 // YE KEVAL TESTING KE LIYE H , KUCH KAAM KA NAHI HAI SIRF HELLO RETURN KARTA HAI
