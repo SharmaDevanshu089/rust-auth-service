@@ -73,7 +73,7 @@ pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCo
     (StatusCode::CREATED, "User created successfully".to_string())
 }
 
-pub async fn login_handler(Json(payload): Json<LoginPayload>) -> (StatusCode, String) {
+pub async fn login_handler(Json(payload): Json<LoginPayload>) -> impl axum::response::IntoResponse {
     info!("Login attempt: {:?}", payload);
 
     // YE UPAR KYO AA RAHA H PTA NAHI
@@ -88,7 +88,34 @@ pub async fn login_handler(Json(payload): Json<LoginPayload>) -> (StatusCode, St
             match verify_result {
                 Ok(Ok(true)) => {
                     info!("Password verification successful for user: {}", user.email);
-                    (StatusCode::OK, "Login successful!".to_string())
+                    (StatusCode::OK, "Login successful!".to_string());
+                    let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+
+                    // 2. Set the expiration time (e.g., 1 day from now)
+                    let expiration = Utc::now()
+                        .checked_add_signed(Duration::days(1))
+                        .expect("Failed to create expiration")
+                        .timestamp();
+
+                    // 3. Create the claims
+                    let claims = Claims {
+                        sub: user.id.to_string(), // Use the user's ID as the subject
+                        exp: expiration as usize,
+                    };
+
+                    // 4. Encode the token
+                    let token = encode(
+                        &Header::default(),
+                        &claims,
+                        &EncodingKey::from_secret(jwt_secret.as_bytes()),
+                    )
+                    .unwrap_or_else(|e| {
+                        error!("Token encoding error: {}", e);
+                        "failed_to_create_token".to_string()
+                    });
+
+                    // 5. Send the token back as JSON
+                    (StatusCode::OK, Json(TokenResponse { token }))
                 }
                 Ok(Ok(false)) => {
                     info!("Password verification failed for user: {}", user.email);
