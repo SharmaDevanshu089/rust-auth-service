@@ -18,7 +18,7 @@ pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCo
     info!("Received new registration: {:?}", payload);
 
     // ENCRIPT KAR RAHA HU PASSWORD KO CRATE KI MADAD SE
-    let hash_result = task::spawn_blocking(move || hash(payload.password, DEFAULT_COST)).await; // Wait for the background thread to finish
+    let hash_result = task::spawn_blocking(move || hash(payload.password, DEFAULT_COST)).await;
 
     // ERROR HANDLE KAR RHA HAI
     let hashed_password = match hash_result {
