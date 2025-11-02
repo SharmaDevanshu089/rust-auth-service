@@ -7,7 +7,6 @@ use dotenvy;
 use std::env;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
-// We only need `fmt` for `fmt::init()`
 use tracing_subscriber::fmt;
 
 /*#[derive(Clone)]
