@@ -2,6 +2,7 @@ use axum::Json;
 use diesel_async::{AsyncConnection, AsyncPgConnection};
 use serde::Deserialize;
 use std::env;
+use tokio::task;
 use tracing::{error, info};
 
 // YE REGISTER WALE OPTION KE LIYE LIKH RAHA HU
@@ -11,7 +12,39 @@ pub struct RegisterPayload {
     pub email: String,
     pub password: String,
 }
-pub async fn register_handler(Json(payload): Json<RegisterPayload>) {
-    // ABHI ISS LOG KAR RHA HU BAAD ME DB ME DALUNGA
+pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCode, String) {
     info!("Received new registration: {:?}", payload);
+
+    // ENCRIPT KAR RAHA HU PASSWORD KO CRATE KI MADAD SE
+    let hash_result = task::spawn_blocking(move || hash(payload.password, DEFAULT_COST)).await; // Wait for the background thread to finish
+
+    // ERROR HANDLE KAR RHA HAI
+    let hashed_password = match hash_result {
+        Ok(Ok(hash)) => {
+            info!("Password hashed successfully");
+            hash
+        }
+        Ok(Err(e)) => {
+            // ENCRIPTION MAI ERROR
+            error!("Password hashing error: {}", e);
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Failed to hash password".to_string(),
+            );
+        }
+        Err(e) => {
+            // PTA NAHI KYA HUA BUT ERROR RETURN KARO ERROR
+            error!("Task spawn error: {}", e);
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Internal server error".to_string(),
+            );
+        }
+    };
+
+    // YE EK TEMPRORY HAI ABHI YAHA ISSE DB M DAAL DUNGA
+
+    info!("Hashed password: {}", hashed_password);
+
+    (StatusCode::CREATED, "User created successfully".to_string())
 }
