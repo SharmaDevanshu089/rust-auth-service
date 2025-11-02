@@ -1,4 +1,4 @@
-use crate::models::{NewUser, User};
+use crate::models::{NewUser, Users};
 use crate::schema::users;
 use diesel::prelude::*;
 use diesel_async::{AsyncConnection, AsyncPgConnection, RunQueryDsl};
@@ -6,14 +6,14 @@ use std::env;
 use tracing::error;
 
 pub mod user_service {
-    use crate::models::{NewUser, User};
+    use crate::models::{NewUser, Users};
     // saare import kar raha hu kyoki tabhi kaam karega (eg me same hai)
     use crate::schema::users::dsl::*;
     use diesel::prelude::*;
     use diesel_async::{AsyncConnection, AsyncPgConnection, RunQueryDsl};
     use std::env;
     use tracing::error;
-    pub async fn create_user(email_in: String, hash_in: String) -> User {
+    pub async fn create_user(email_in: String, hash_in: String) -> Users {
         // PURNANA DATABASE URL NIKAL LIYA
         let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         let mut conn = AsyncPgConnection::establish(&db_url)
@@ -30,7 +30,7 @@ pub mod user_service {
         let user = diesel::insert_into(users)
             .values(&new_user)
             // ISSE RESULT VAPIS RETUNR HOGA CONNECTION KA
-            .get_result::<User>(&mut conn)
+            .get_result::<Users>(&mut conn)
             .await
             .expect("Error saving new user");
 

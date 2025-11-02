@@ -13,6 +13,7 @@ mod models;
 mod schema;
 use crate::handler::register_handler;
 use axum::routing::post;
+mod services;
 
 /*#[derive(Clone)]
 struct AppState {

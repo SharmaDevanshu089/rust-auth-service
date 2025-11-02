@@ -1,3 +1,4 @@
+use crate::services::user_service;
 use axum::Json;
 use axum::http::StatusCode;
 use bcrypt::{DEFAULT_COST, hash};
@@ -43,10 +44,10 @@ pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCo
             );
         }
     };
+    let new_user = user_service::create_user(payload.email, hashed_password).await;
 
+    info!("New user created: {:?}", new_user);
     // YE EK TEMPRORY HAI ABHI YAHA ISSE DB M DAAL DUNGA
-
-    info!("Hashed password: {}", hashed_password);
 
     (StatusCode::CREATED, "User created successfully".to_string())
 }
