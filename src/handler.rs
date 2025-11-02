@@ -7,6 +7,7 @@ use chrono::{Duration, Utc};
 use diesel_async::{AsyncConnection, AsyncPgConnection};
 use jsonwebtoken::{EncodingKey, Header, encode};
 use serde::Deserialize;
+use serde::Serialize;
 use std::env;
 use tokio::task;
 use tracing::{error, info};
@@ -22,6 +23,17 @@ pub struct RegisterPayload {
 pub struct LoginPayload {
     pub email: String,
     pub password: String,
+}
+
+#[derive(Serialize)]
+struct Claims {
+    sub: String,
+    exp: usize,
+}
+
+#[derive(Serialize)]
+pub struct TokenResponse {
+    token: String,
 }
 
 pub async fn register_handler(Json(payload): Json<RegisterPayload>) -> (StatusCode, String) {
