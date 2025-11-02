@@ -5,6 +5,9 @@ use chrono::Utc;
 use diesel::prelude::*;
 use uuid::Uuid;
 
+// Schema of database WILL BREAK IF CHANGED
+use crate::schema::users;
+
 // ABI YE STRUCT BANA RAHA HU MERE DATABSE ME SE UTAR KE
 #[derive(Queryable, Selectable, Debug)]
 #[diesel(table_name = users)]
