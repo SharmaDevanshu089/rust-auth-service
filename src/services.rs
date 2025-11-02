@@ -42,9 +42,9 @@ pub mod user_service {
         let mut conn = AsyncPgConnection::establish(&db_url)
             .await
             .expect("Failed to connect to database");
-        let user = users // `users` comes from the dsl
-            .filter(email.eq(email_in)) // This is the WHERE clause
-            .first::<Users>(&mut conn) // Get the first result or fail
+        let user = users
+            .filter(email.eq(email_in))
+            .first::<Users>(&mut conn)
             .await;
         user
     }

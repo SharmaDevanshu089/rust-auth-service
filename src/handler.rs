@@ -1,6 +1,7 @@
 use crate::services::user_service;
 use axum::Json;
 use axum::http::StatusCode;
+use bcrypt::verify;
 use bcrypt::{DEFAULT_COST, hash};
 use diesel_async::{AsyncConnection, AsyncPgConnection};
 use serde::Deserialize;
