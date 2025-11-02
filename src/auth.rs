@@ -15,3 +15,9 @@ pub struct Claims {
     pub sub: String,
     pub exp: usize,
 }
+
+// YAHA PE CLAIMS HOLD HONGE
+#[derive(Debug)]
+pub struct AuthUser {
+    pub claims: Claims,
+}
