@@ -8,6 +8,7 @@ use std::env;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tracing_subscriber::fmt;
+mod models;
 
 /*#[derive(Clone)]
 struct AppState {
