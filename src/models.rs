@@ -17,3 +17,10 @@ pub struct Users {
     pub password_hash: String,
     pub created_at: DateTime<Utc>,
 }
+// YE NAYE USERS KE LIYE H TRANSPORT KARNA KE LIYE
+#[derive(Insertable)]
+#[diesel(table_name = users)]
+pub struct NewUser {
+    pub email: String,
+    pub password_hash: String,
+}
