@@ -21,3 +21,40 @@ pub struct Claims {
 pub struct AuthUser {
     pub claims: Claims,
 }
+
+#[async_trait]
+impl<S> FromRequestParts<S> for AuthUser
+where
+    S: Send + Sync,
+{
+    type Rejection = (StatusCode, String);
+
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        let auth_header = parts.headers.typed_get::<Authorization<Bearer>>();
+
+        let token = match auth_header {
+            Some(Authorization(bearer)) => bearer.token().to_string(),
+            None => {
+                return Err((StatusCode::UNAUTHORIZED, "Missing token".to_string()));
+            }
+        };
+
+        let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+
+        let token_data = decode::<Claims>(
+            &token,
+            &DecodingKey::from_secret(jwt_secret.as_bytes()),
+            &Validation::default(),
+        );
+
+        match token_data {
+            Ok(token_data) => Ok(AuthUser {
+                claims: token_data.claims,
+            }),
+            Err(e) => {
+                let error_message = format!("Invalid token: {}", e);
+                Err((StatusCode::UNAUTHORIZED, error_message))
+            }
+        }
+    }
+}
